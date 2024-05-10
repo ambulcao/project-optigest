@@ -1,42 +1,34 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 require_once '../functions.php';
 
-$funcionarios = searchEmployeeData();
-
-
-$dbHost = "localhost";
-$dbName = "optigest"; 
-$dbUser = "root";  
-$dbPassword = ""; 
-
-$db = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $nome = $_POST["nome"];
-  $idade = $_POST["idade"];
-  $cargo = $_POST["cargo"];
-  $salario = $_POST["salario"];
-  $dataAdmissao = $_POST["data_admissao"];
+    // Verificar se os parâmetros do formulário foram recebidos
+    if (isset($_POST["nome"]) && isset($_POST["idade"]) && isset($_POST["cargo"]) && isset($_POST["salario"]) && isset($_POST["data_admissao"])) {
+        // Obter os parâmetros do formulário
+        $nome = $_POST["nome"];
+        $idade = $_POST["idade"];
+        $cargo = $_POST["cargo"];
+        $salario = $_POST["salario"];
+        $dataAdmissao = $_POST["data_admissao"];
 
-  // Chamar a função para cadastrar o funcionário apenas se todas as variáveis estiverem definidas
-  if ($nome && $idade && $cargo && $salario && $dataAdmissao) {
-      // Chamar a função para cadastrar o funcionário
-      if (registerEmployee($db, $nome, $idade, $cargo, $salario, $dataAdmissao)) {
-          echo "Funcionário cadastrado com sucesso!";
-      } else {
-          echo "Erro ao cadastrar funcionário.";
-      }
-  } else {
-      echo "Por favor, preencha todos os campos do formulário.";
-  }
+        // Chamar a função para cadastrar o funcionário, passando a conexão como argumento
+        if (registerEmployee($db, $nome, $idade, $cargo, $salario, $dataAdmissao)) {
+            echo "Funcionário cadastrado com sucesso!";
+        } else {
+            echo "Erro ao cadastrar funcionário.";
+        }
+    } else {
+        echo "Por favor, preencha todos os campos do formulário.";
+    }
 }
 
+// Buscar os funcionários
+$funcionarios = searchEmployeeData();
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -51,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
 
+<section>
   <h1>Cadastro de Funcionário</h1>
   <form method="post" >
     <label for="nome">Nome:</label>
@@ -70,6 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <input type="submit" value="Cadastrar Funcionário">
   </form>
+</section>
 
   <div class="container centralizar-pagina">
     <h1>Cadastro e Visualização de Funcionários</h1>

@@ -1,62 +1,61 @@
 <?php
 
 require_once 'bdd.php';
-//global $db;
 
 /**
  * Função Buscar Employess
  */
 
 function searchEmployeeData() {
-  $dbHost = "localhost";
-  $dbName = "optigest"; 
-  $dbUser = "root";  
-  $dbPassword = ""; 
+  global $db; // Importante para usar a conexão definida em bdd.php
 
-    try {
-        $db = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  try {
+      // Verificar se a conexão está estabelecida
+      if ($db !== null) {
+          $sql = 'SELECT id, name as nome, age, job, salary, admission_date FROM employees';
+          $stmt = $db->query($sql);
 
-        $sql = 'SELECT id, name as nome, age, job, salary, admission_date FROM employees';
-        $stmt = $db->query($sql);
+          $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $employees;
-    } catch (PDOException $e) {
-        die('Erro ao conectar ao banco de dados: ' . $e->getMessage());
-    }
+          return $employees;
+      } else {
+          throw new Exception("Conexão com o banco de dados não está estabelecida.");
+      }
+  } catch (PDOException $e) {
+      // Em caso de erro, capturar a exceção
+      echo "Erro ao buscar funcionários: " . $e->getMessage();
+      return false;
+  }
 }
-
 
 /**
  * Função Cadastrar Employees
  */
+function registerEmployee($name, $age, $job, $salary, $admission_date) {
+  global $db; // Importante para usar a conexão definida em bdd.php
 
-
-
- function registerEmployee($db, $name, $age, $job, $salary, $admission_date) {
   try {
-      $stmt = $db->prepare("INSERT INTO employees (name, age, job, salary, admission_date) VALUES (:name, :age, :job, :salary, :admission_date)");
+      if ($db !== null) {
+          $stmt = $db->prepare("INSERT INTO employees (name, age, job, salary, admission_date) VALUES (:name, :age, :job, :salary, :admission_date)");
 
-      // Vincular os parâmetros da consulta aos valores fornecidos
-      $stmt->bindParam(':name', $name);
-      $stmt->bindParam(':age', $age); 
-      $stmt->bindParam(':job', $job); 
-      $stmt->bindParam(':salary', $salary); 
-      $stmt->bindParam(':admission_date', $admission_date); 
+          // Vincular os parâmetros da consulta aos valores fornecidos
+          $stmt->bindParam(':name', $name);
+          $stmt->bindParam(':age', $age); 
+          $stmt->bindParam(':job', $job); 
+          $stmt->bindParam(':salary', $salary); 
+          $stmt->bindParam(':admission_date', $admission_date); 
 
-      // Executar a instrução SQL para inserir o funcionário
-      $stmt->execute();
+          // Executar a instrução SQL para inserir o funcionário
+          $stmt->execute();
 
-      // Fechar a conexão com o banco de dados
-      $db = null;
-
-      // Verificar se a inserção foi bem-sucedida
-      if ($stmt->rowCount() > 0) {
-          return true; // Retornar verdadeiro se o funcionário foi inserido com sucesso
+          // Verificar se a inserção foi bem-sucedida
+          if ($stmt->rowCount() > 0) {
+              return true; 
+          } else {
+              return false; 
+          }
       } else {
-          return false; // Retornar falso se não foi possível inserir o funcionário
+          throw new Exception("Conexão com o banco de dados não está estabelecida.");
       }
   } catch (PDOException $e) {
       // Em caso de erro, capturar a exceção e retornar falso
@@ -65,23 +64,13 @@ function searchEmployeeData() {
   }
 } 
 
-
-
 /**
  * Função Buscar Projetos
  */
-
-
 function buscarDadosProjetos() {
-  $dbHost = "localhost";
-  $dbName = "optigest"; 
-  $dbUser = "root";  
-  $dbPassword = ""; 
+    global $db; // Importante para usar a conexão definida em bdd.php
 
     try {
-        $db = new PDO("mysql:host=$dbHost;dbname=$dbName", $dbUser, $dbPassword);
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
         $sql = 'SELECT id, id_employees, description, value, status, delivery_date FROM projects';
         $stmt = $db->query($sql);
 
@@ -89,10 +78,18 @@ function buscarDadosProjetos() {
 
         return $employees;
     } catch (PDOException $e) {
-        die('Erro ao conectar ao banco de dados: ' . $e->getMessage());
+        
+        echo "Erro ao buscar projetos: " . $e->getMessage();
+        return false;
     }
 }
 
-
+/**
+ * Função para fechar a conexão com o banco de dados
+ */
+function fecharConexao() {
+    global $db; 
+    $db = null;
+}
 
 ?>
