@@ -1,20 +1,24 @@
 .centralizar-pagina {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-image: url('https://ortogonalprojetos.com.br/wp-content/uploads/0256-7-Beneficios-de-Manter-os-Projetos-no-Project-Online.png');
-    background-repeat: repeat;
-    background-size: cover;
-    background-position: center;
-    border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-image: url('https://ortogonalprojetos.com.br/wp-content/uploads/0256-7-Beneficios-de-Manter-os-Projetos-no-Project-Online.png');
+  background-repeat: repeat;
+  background-size: cover;
+  background-position: center;
+  border: none;
+  display: flex; /* Ativa Flexbox */
+  flex-direction: column; /* Organiza os elementos na vertical */
+  align-items: center; /* Alinha horizontalmente ao centro */
+  justify-content: center; /* Alinha verticalmente ao centro */
+  min-height: 100vh; /* Altura mínima da página para garantir centralização */
 }
 
 .conteudo {
-    text-align: center;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px; /* Espaçamento interno */
+    background-color: #fff; /* Cor de fundo branca para o conteúdo */
+    border-radius: 5px; /* Arredondamento dos cantos */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra leve */
 }
