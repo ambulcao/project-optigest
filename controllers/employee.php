@@ -34,7 +34,7 @@ $funcionarios = searchEmployeeData();
 <html lang="pt-br">
 
 <head>
-
+<meta charset="UTF-8">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
   <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
@@ -62,6 +62,7 @@ $funcionarios = searchEmployeeData();
     <input type="date" id="data_admissao" name="data_admissao" required><br><br>
 
     <input type="submit" value="Cadastrar Funcionário">
+
   </form>
 </section>
 
@@ -83,9 +84,9 @@ $funcionarios = searchEmployeeData();
         <?php foreach ($funcionarios as $funcionario) : ?>
           <tr>
             <td><?php echo $funcionario['id']; ?></td>
-            <td><?php echo isset($funcionario['nome']) ? $funcionario['nome'] : ''; ?></td>
+            <td><?php echo isset($funcionario['nome']) ? utf8_encode($funcionario['nome']) : ''; ?></td>
             <td><?php echo isset($funcionario['age']) ? $funcionario['age'] : ''; ?></td>
-            <td><?php echo isset($funcionario['job']) ? $funcionario['job'] : ''; ?></td>
+            <td><?php echo isset($funcionario['job']) ? utf8_encode($funcionario['job']) : ''; ?></td>
             <td><?php echo isset($funcionario['salary']) ? $funcionario['salary'] : ''; ?></td>
             <td><?php echo isset($funcionario['admission_date']) ? $funcionario['admission_date'] : ''; ?></td>
           </tr>

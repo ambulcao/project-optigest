@@ -73,12 +73,14 @@ function searchProjectData() {
     global $db;
 
     try {
-        $sql = 'SELECT id, id_employees, description, value, status, delivery_date FROM projects';
+        $sql = 'SELECT p.id, p.id_employees, e.name AS employee_name, p.description, p.value, p.status, p.delivery_date 
+        FROM projects p
+        INNER JOIN employees e ON p.id_employees = e.id';
         $stmt = $db->query($sql);
 
-        $employees = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $employees;
+        return $projects;
     } catch (PDOException $e) {
         
         echo "Erro ao buscar projetos: " . $e->getMessage();
