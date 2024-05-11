@@ -66,14 +66,56 @@ function searchEmployeeData() {
     }
   }
 
+
+  /**
+ * Função para cadastrar projetos
+ */
+function registerProject($id_employees, $description, $value, $status, $delivery_date, PDO $db) {
+  try {
+      // Validação básica de dados (opcional, mas recomendado)
+      if (empty($id_employees) || empty($description) || empty($value) || empty($status) || empty($delivery_date)) {
+          throw new Exception("Dados inválidos para cadastro de projeto.");
+      }
+  
+      // Prepara a consulta SQL utilizando prepared statements
+      $stmt = $db->prepare("INSERT INTO projects (id_employees, description, value, status, delivery_date) VALUES (:id_employees, :description, :value, :status, :delivery_date)");
+  
+      // Vincula os valores dos parâmetros aos marcadores de posição
+      $stmt->bindParam(':id_employees', $id_employees);
+      $stmt->bindParam(':description', $description);
+      $stmt->bindParam(':value', $value);
+      $stmt->bindParam(':status', $status);
+      $stmt->bindParam(':delivery_date', $delivery_date);
+  
+      // Executa a consulta para inserir o projeto
+      $stmt->execute();
+  
+      // Verifica se a inserção foi bem-sucedida
+      if ($stmt->rowCount() > 0) {
+          return true; // Retorna true em caso de sucesso
+      } else {
+          return false; // Retorna false em caso de falha
+      }
+  } catch (PDOException $e) {
+      echo "Erro ao cadastrar projeto: " . $e->getMessage(); // Exibe mensagem de erro em caso de exceção
+      return false; // Retorna false em caso de exceção
+  } catch (Exception $e) {
+      echo "Erro: " . $e->getMessage(); // Exibe mensagem de erro de validação (opcional)
+      return false; // Retorna false em caso de exceção
+  }
+}
+
+
+
 /**
  * Função Buscar Projetos
  */
+
 function searchProjectData() {
     global $db;
 
     try {
-        $sql = 'SELECT p.id, p.id_employees, e.name AS employee_name, p.description, p.value, p.status, p.delivery_date 
+        $sql = 'SELECT p.id, p.id_employees, e.name AS employee_name, p.description, p.value, p.status, p.delivery_date, DATE_FORMAT(p.created_date, "%Y-%m-%d") AS created_date 
         FROM projects p
         INNER JOIN employees e ON p.id_employees = e.id';
         $stmt = $db->query($sql);
@@ -87,6 +129,28 @@ function searchProjectData() {
         return false;
     }
 }
+
+/**
+ * Função para buscar dados do funcionário pelo ID
+ */
+function getEmployeeById($employeeId) {
+  global $db;
+
+  try {
+      $sql = 'SELECT id, name as nome FROM employees WHERE id = :id';
+      $stmt = $db->prepare($sql);
+      $stmt->bindParam(':id', $employeeId);
+      $stmt->execute();
+
+      $employee = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      return $employee;
+  } catch (PDOException $e) {
+      echo "Erro ao buscar dados do funcionário: " . $e->getMessage();
+      return false;
+  }
+}
+
 
 /**
  * Função para fechar a conexão com o banco de dados
