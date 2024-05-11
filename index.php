@@ -33,7 +33,9 @@ if (isset($routes[$uri]) && (empty($routes[$uri]['method']) || $routes[$uri]['me
   <div class="container centralizar-pagina">
     <h1 class="conteudo">Employee and Project Management</h1>
     <div class="container-botoes-radio">
+
   <div class="row">
+
     <div class="col-md-6">
     <a href="./controllers/employee.php" class="nav-link">
       <label for="funcionario-radio" class="botao-radio">
@@ -42,13 +44,15 @@ if (isset($routes[$uri]) && (empty($routes[$uri]['method']) || $routes[$uri]['me
       </label>
       Register Employee</a>
     </div>
+
     <div class="col-md-6">
-      
+    <a href="./controllers/project.php" class="nav-link">
       <label for="projeto-radio" class="botao-radio">
         <img src="./assets/image/project-preview.png" alt="Projeto"></br>
-        <span>Registrar Projeto</span>
       </label>
+      Register Project</a>
     </div>
+
   </div>
 
   <div class="row">

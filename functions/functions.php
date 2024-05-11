@@ -69,7 +69,7 @@ function searchEmployeeData() {
 /**
  * Função Buscar Projetos
  */
-function buscarDadosProjetos() {
+function searchProjectData() {
     global $db;
 
     try {
@@ -94,5 +94,73 @@ function fecharConexao() {
     $db = null;
 }
 
+/**
+ * Função para calcular a iddade média
+ */
+
+function averageAge($employees) {
+  $totalAge = 0;
+  $count = count($employees);
+
+  // Soma das idades de todos os funcionários
+  foreach ($employees as $employee) {
+      $totalAge += $employee->age;
+  }
+
+  // Calcula a média das idades
+  if ($count > 0) {
+      return $totalAge / $count;
+  } else {
+      return 0; // Retorna 0 se não houver funcionários
+  }
+}
+
+/**
+ * Função para simular o incremento de salário dada a uma porcentagem
+ */
+
+
+function simulateSalaryIncrement($employees, $incrementPercentage) {
+  foreach ($employees as $employee) {
+      // Calcula o novo salário incrementado para cada funcionário
+      $incrementedSalary = $employee->salary * (1 + ($incrementPercentage / 100));
+      // Define o novo salário para o funcionário
+      $employee->salary = $incrementedSalary;
+  }
+  return $employees;
+}
+
+/**
+ * Função para retornar os projetos entregues/concluídos durante o ano corrente, ordenados por valor decrescente
+ */
+function getCompletedProjectsForCurrentYear() {
+  global $db;
+
+  try {
+      if ($db !== null) {
+          // Obtém o ano corrente
+          $currentYear = date('Y');
+
+          // Consulta SQL para buscar os projetos concluídos durante o ano corrente e ordená-los por valor decrescente
+          $sql = "SELECT id, id_employees, description, value, status, delivery_date 
+                  FROM projects 
+                  WHERE status = 'concluído' AND YEAR(delivery_date) = :current_year 
+                  ORDER BY value DESC";
+
+          $stmt = $db->prepare($sql);
+          $stmt->bindParam(':current_year', $currentYear, PDO::PARAM_INT);
+          $stmt->execute();
+
+          $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+          return $projects;
+      } else {
+          throw new Exception("Conexão com o banco de dados não está estabelecida.");
+      }
+  } catch (PDOException $e) {
+      echo "Erro ao buscar projetos concluídos: " . $e->getMessage();
+      return false;
+  }
+}
 
 ?>

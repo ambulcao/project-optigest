@@ -65,5 +65,6 @@ class Employee {
     
     public function setAdmissionDate($admission_date) {
         $this->admission_date = $admission_date;
-    }
+    }   
+  
 }
