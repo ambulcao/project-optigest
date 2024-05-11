@@ -26,16 +26,47 @@ if (isset($routes[$uri]) && (empty($routes[$uri]['method']) || $routes[$uri]['me
   <meta charset="UTF-8">
   <title>EPM</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 
 <body>
   <div class="container centralizar-pagina">
     <h1 class="conteudo">Employee and Project Management</h1>
-    <a href="./controllers/employee.php" class="nav-link">Register Employee</a>
-    <a href="./controllers/project.php" class="nav-link">Register Project</a>
-    <a href="./controllers/allocate-employee-project.php" class="nav-link">Allocate Employee to Project</a>
-    <a href="./controllers/about.php" class="nav-link">About</a>
+    <div class="container-botoes-radio">
+  <div class="row">
+    <div class="col-md-6">
+    <a href="./controllers/employee.php" class="nav-link">
+      <label for="funcionario-radio" class="botao-radio">
+        <img src="https://cdn.iconscout.com/icon/premium/png-512-thumb/about-1568812-1326392.png?f=webp&w=256" alt="Funcionário"></br>
+       
+      </label>
+      Register Employee</a>
+    </div>
+    <div class="col-md-6">
+      
+      <label for="projeto-radio" class="botao-radio">
+        <img src="./assets/image/project-preview.png" alt="Projeto"></br>
+        <span>Registrar Projeto</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="alocar-radio" class="botao-radio">
+        <img src="https://cdn.iconscout.com/icon/premium/png-512-thumb/about-1568812-1326392.png?f=webp&w=256" alt="Alocar"></br>
+        <span>Alocar Funcionário ao Projeto</span>
+      </label>
+    </div>
+    <div class="col-md-6">
+      <label for="sobre-radio" class="botao-radio">
+        <img src="https://cdn.iconscout.com/icon/premium/png-512-thumb/about-1568812-1326392.png?f=webp&w=256" alt="Sobre"></br>
+        <span>Sobre</span>
+      </label>
+    </div>
+  </div>
+</div>
+
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
