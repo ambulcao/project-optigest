@@ -1,6 +1,12 @@
 <?php
 
 require_once '../functions/functions.php';
+require_once '../class/class-project.php';
+
+// Buscar os Projetos
+$projects = searchProjectData();
+$completedProjects = Project::getCompletedProjectsForCurrentYear();
+
 
 // Dados para cadastro do projeto
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -24,9 +30,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-//Verificação de projetos concluídos
+// Verificação de projetos concluídos
 if (isset($_POST['completed_projects_button'])) {
-    $completedProjects = getCompletedProjectsForCurrentYear();
+    // Chame o método estático da classe Project
+    $completedProjects = Project::getCompletedProjectsForCurrentYear();
     if ($completedProjects !== false) {
         // Processar os projetos encontrados
         foreach ($completedProjects as $project) {
@@ -52,8 +59,7 @@ if (isset($_POST['employee_id'])) {
    // echo "ID de Colaborador não especificado";
 }
 
-// Buscar os Projetos
-$projects = searchProjectData();
+
 
 
 ?>
@@ -108,9 +114,8 @@ $projects = searchProjectData();
 
     <input type="submit" value="Cadastrar Projeto">
 
-    <form method="post">
-    <button type="submit" name="completed_projects_button">Projetos concluídos</button>
-</form>
+    <button type="button" id="completed_projects_button">Projetos concluídos</button>
+
   </form>
 </section>
 
@@ -149,4 +154,25 @@ $projects = searchProjectData();
   </div>
 
   <script src="../assets/js/project.js" type="text/javascript"></script>
+
+  <script>
+    $(document).ready(function() {
+    $('#completed_projects_button').click(function() {
+        $.ajax({
+            url: '../class/class-project.php',
+            type: 'POST',
+            data: { completed_projects_button: true },
+            success: function(response) {
+                // Limpar a tabela
+                $('#tabelaProjetos').DataTable().clear().draw();
+                // Adicionar os dados retornados à tabela
+                $('#tabelaProjetos').DataTable().rows.add(response.data).draw();
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+            }
+        });
+    });
+});
+  </script>
 </body>

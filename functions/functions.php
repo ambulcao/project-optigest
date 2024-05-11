@@ -130,6 +130,7 @@ function searchProjectData() {
     }
 }
 
+
 /**
  * Função para buscar dados do funcionário pelo ID
  */
@@ -196,37 +197,5 @@ function simulateSalaryIncrement($employees, $incrementPercentage) {
   return $employees;
 }
 
-/**
- * Função para retornar os projetos entregues/concluídos durante o ano corrente, ordenados por valor decrescente
- */
-function getCompletedProjectsForCurrentYear() {
-  global $db;
-
-  try {
-      if ($db !== null) {
-          // Obtém o ano corrente
-          $currentYear = date('Y');
-
-          // Consulta SQL para buscar os projetos concluídos durante o ano corrente e ordená-los por valor decrescente
-          $sql = "SELECT id, id_employees, description, value, status, delivery_date 
-                  FROM projects 
-                  WHERE status = 'concluído' AND YEAR(delivery_date) = :current_year 
-                  ORDER BY value DESC";
-
-          $stmt = $db->prepare($sql);
-          $stmt->bindParam(':current_year', $currentYear, PDO::PARAM_INT);
-          $stmt->execute();
-
-          $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-          return $projects;
-      } else {
-          throw new Exception("Conexão com o banco de dados não está estabelecida.");
-      }
-  } catch (PDOException $e) {
-      echo "Erro ao buscar projetos concluídos: " . $e->getMessage();
-      return false;
-  }
-}
 
 ?>
