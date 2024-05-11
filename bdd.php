@@ -14,7 +14,7 @@ try {
     //echo "Erro ao conectar com o banco de dados Optigest: " . $e->getMessage();
 }
 
-$db = null;
+//$db = null;
 
 
 

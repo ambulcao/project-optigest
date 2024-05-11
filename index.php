@@ -1,3 +1,24 @@
+<?php
+
+require_once('./routes/route.php');
+
+// Obtendo a URI da requisição
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+//var_dump("minha uri" . $uri . "esta aqui");
+
+// Verificando se a URI existe no array de rotas e se o método HTTP corresponde
+if (isset($routes[$uri]) && (empty($routes[$uri]['method']) || $routes[$uri]['method'] === $_SERVER['REQUEST_METHOD'])) {
+    //var_dump("minha route" . $routes . "esta aqui");
+    // Se existir, incluindo o arquivo PHP correspondente
+    require_once($routes[$uri]['file']);
+    //var_dump("Check" , $routes[$uri]['file']);
+} else {
+    //echo "Page Not Found! $uri";
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -12,8 +33,9 @@
   <div class="container centralizar-pagina">
     <h1 class="conteudo">Employee and Project Management</h1>
     <a href="./controllers/employee.php" class="nav-link">Register Employee</a>
-<a href="./controllers/project.php" class="nav-link">Register Project</a>
-<a href="./controllers/allocate-employee-project.php" class="nav-link">Allocate Employee to Project</a>
+    <a href="./controllers/project.php" class="nav-link">Register Project</a>
+    <a href="./controllers/allocate-employee-project.php" class="nav-link">Allocate Employee to Project</a>
+    <a href="./controllers/about.php" class="nav-link">About</a>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

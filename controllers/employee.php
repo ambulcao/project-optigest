@@ -1,10 +1,9 @@
 <?php
 
-require_once '../functions.php';
-
+require_once '../functions/functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Verificar se os parâmetros do formulário foram recebidos
+    // Receber os parâmetros do form
     if (isset($_POST["nome"]) && isset($_POST["idade"]) && isset($_POST["cargo"]) && isset($_POST["salario"]) && isset($_POST["data_admissao"])) {
         // Obter os parâmetros do formulário
         $nome = $_POST["nome"];
@@ -13,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $salario = $_POST["salario"];
         $dataAdmissao = $_POST["data_admissao"];
 
-        // Chamar a função para cadastrar o funcionário, passando a conexão como argumento
+        // Chamando a função como cadastro e passando a conexão como argumento
         if (registerEmployee($db, $nome, $idade, $cargo, $salario, $dataAdmissao)) {
             echo "Funcionário cadastrado com sucesso!";
         } else {
@@ -26,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Buscar os funcionários
 $funcionarios = searchEmployeeData();
+
 
 ?>
 
