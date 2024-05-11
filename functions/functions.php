@@ -94,4 +94,5 @@ function fecharConexao() {
     $db = null;
 }
 
+
 ?>
