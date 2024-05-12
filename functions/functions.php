@@ -198,4 +198,61 @@ function simulateSalaryIncrement($employees, $incrementPercentage) {
 }
 
 
+// Função para buscar e formatar os projetos concluídos
+function handleCompletedProjectsRequest() {
+  global $db;
+
+  try {
+      if ($db !== null) {
+          // Obtém o ano corrente
+          $currentYear = date('Y');
+
+          // Consulta SQL para buscar os projetos concluídos durante o ano corrente e ordená-los por data de entrega ascendente
+          $sql = "SELECT p.id, p.id_employees, e.name AS employee_name, p.description, p.value, p.status, p.delivery_date, DATE_FORMAT(p.created_date, '%Y-%m-%d') AS created_date 
+                  FROM projects p
+                  INNER JOIN employees e ON p.id_employees = e.id
+                  WHERE p.status = 'concluido' AND YEAR(p.delivery_date) = :current_year
+                  ORDER BY p.delivery_date DESC";
+
+          $stmt = $db->prepare($sql);
+          $stmt->bindParam(':current_year', $currentYear, PDO::PARAM_INT);
+          $stmt->execute();
+
+          $completedProjects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+          // Verifique se há projetos concluídos e se os dados retornados não estão vazios
+          if (!empty($completedProjects)) {
+              // Formate os dados para o DataTables
+              $data = array();
+
+              foreach ($completedProjects as $project) {
+                  $data[] = array(
+                      $project['id'],
+                      $project['id_employees'],
+                      utf8_encode($project['employee_name']),
+                      utf8_encode($project['description']),
+                      $project['value'],
+                      utf8_encode($project['status']),
+                      $project['delivery_date'],
+                      $project['created_date']
+                  );
+              }
+
+              // Retorne os dados no formato JSON
+              return array('data' => $data);
+          } else {
+              // Se não houver projetos concluídos ou os dados estiverem vazios, retorne uma mensagem de erro
+              return array('error' => 'Não foi possível obter os projetos concluídos.');
+          }
+      } else {
+          throw new Exception("Conexão com o banco de dados não está estabelecida.");
+      }
+  } catch (PDOException $e) {
+      echo "Erro ao buscar projetos concluídos: " . $e->getMessage();
+      return false;
+  }
+}
+
+
+
 ?>

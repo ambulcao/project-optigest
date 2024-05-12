@@ -1,11 +1,13 @@
 <?php
 
 require_once '../functions/functions.php';
-require_once '../class/class-project.php';
+
 
 // Buscar os Projetos
 $projects = searchProjectData();
-$completedProjects = Project::getCompletedProjectsForCurrentYear();
+$completedProjects = handleCompletedProjectsRequest();
+//var_dump("Dados retornados da função handle: ", $completedProjects);
+
 
 
 // Dados para cadastro do projeto
@@ -30,40 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Verificação de projetos concluídos
-if (isset($_POST['completed_projects_button'])) {
-    // Chame o método estático da classe Project
-    $completedProjects = Project::getCompletedProjectsForCurrentYear();
-    if ($completedProjects !== false) {
-        // Processar os projetos encontrados
-        foreach ($completedProjects as $project) {
-            // Exibir as informações de cada projeto
-            echo "ID: " . $project['id'] . ", Descrição: " . $project['description'] . ", Valor: " . $project['value'] . "<br>";
-        }
-    } else {
-        echo "Não foi possível obter os projetos concluídos.";
-    }
-}
-
-// Verificando se foi enviado um ID de colaborador via POST
-if (isset($_POST['employee_id'])) {
-    $employeeId = $_POST['employee_id'];
-    // Buscar o nome do colaborador com base no ID
-    $employee = getEmployeeById($employeeId);
-    if ($employee !== false) {
-        echo $employee['nome']; // Retornar o nome do colaborador
-    } else {
-        echo "Nome do Colaborador não encontrado";
-    }
-} else {
-   // echo "ID de Colaborador não especificado";
-}
-
-
-
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -116,12 +85,13 @@ if (isset($_POST['employee_id'])) {
 
     <button type="button" id="completed_projects_button">Projetos concluídos</button>
 
+
+
   </form>
 </section>
 
-  <div class="container centralizar-pagina">
-  <h1>Visualização dos Projetos</h1>
-
+<div class="container centralizar-pagina">
+    <h1>Visualização dos Projetos</h1>
 
     <table id="tabelaProjetos" class="display">
       <thead>
@@ -153,26 +123,23 @@ if (isset($_POST['employee_id'])) {
     </table>
   </div>
 
-  <script src="../assets/js/project.js" type="text/javascript"></script>
-
   <script>
     $(document).ready(function() {
+    $('#tabelaProjetos').DataTable();
+
     $('#completed_projects_button').click(function() {
-        $.ajax({
-            url: '../class/class-project.php',
-            type: 'POST',
-            data: { completed_projects_button: true },
-            success: function(response) {
-                // Limpar a tabela
-                $('#tabelaProjetos').DataTable().clear().draw();
-                // Adicionar os dados retornados à tabela
-                $('#tabelaProjetos').DataTable().rows.add(response.data).draw();
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-            }
-        });
+        // Limpar a tabela
+        $('#tabelaProjetos').DataTable().clear().draw();
+
+        // Adicionar os dados diretamente da variável PHP à tabela DataTables
+        var completedProjectsData = <?php echo json_encode($completedProjects['data']); ?>;
+        $('#tabelaProjetos').DataTable().rows.add(completedProjectsData).draw();
+
+        // Exibir a variável no console
+        console.log(completedProjectsData);
     });
+
 });
   </script>
 </body>
+</html>
