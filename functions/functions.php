@@ -165,22 +165,18 @@ function fecharConexao() {
  * Função para calcular a iddade média
  */
 
-function averageAge($employees) {
-  $totalAge = 0;
-  $count = count($employees);
+ function averageAge() {
+  global $db;
 
-  // Soma das idades de todos os funcionários
-  foreach ($employees as $employee) {
-      $totalAge += $employee->age;
-  }
+  $sql = "SELECT AVG(age) AS average_age FROM employees";
+    $result = $db->query($sql);
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $databaseAverageAge = $row['average_age'];
 
-  // Calcula a média das idades
-  if ($count > 0) {
-      return $totalAge / $count;
-  } else {
-      return 0; // Retorna 0 se não houver funcionários
-  }
+    return $databaseAverageAge;
+
 }
+
 
 /**
  * Função para simular o incremento de salário dada a uma porcentagem
@@ -249,6 +245,68 @@ function handleCompletedProjectsRequest() {
       }
   } catch (PDOException $e) {
       echo "Erro ao buscar projetos concluídos: " . $e->getMessage();
+      return false;
+  }
+}
+
+/**
+ * Função para buscar e formatar os projetos a entregar dentro de um intervalo de datas
+ */
+
+ function handleProjectsToDeliverRequest($startDate, $endDate) {
+  global $db;
+
+  try {
+      if ($db !== null) {
+          // Verificar se as datas foram preenchidas
+          if (empty($startDate) || empty($endDate)) {
+              return array('error' => 'Por favor, preencha as datas inicial e final.');
+          }
+
+          // Configura o PDO para lançar exceções em caso de erros
+          $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+          // Consulta SQL para listar os projetos a entregar dentro do intervalo de datas, agrupados por funcionário e ordenados pela data mais próxima de entrega
+          $sql = "SELECT p.id, p.id_employees, e.name AS employee_name, p.description, p.value, p.status, p.delivery_date, DATE_FORMAT(p.created_date, '%Y-%m-%d') AS created_date 
+                  FROM projects p
+                  INNER JOIN employees e ON p.id_employees = e.id
+                  WHERE p.status != 'concluido' AND p.delivery_date BETWEEN :start_date AND :end_date
+                  ORDER BY p.delivery_date ASC";
+
+          // Prepara a consulta SQL
+          $stmt = $db->prepare($sql);
+          $stmt->bindParam(':start_date', $startDate);
+          $stmt->bindParam(':end_date', $endDate);
+
+          // Executa a consulta SQL
+          $stmt->execute();
+
+          // Obtém os projetos a entregar
+          $projetosAEntregar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+          // Agrupa os projetos por funcionário
+          $projetosPorFuncionario = array();
+          foreach ($projetosAEntregar as $projeto) {
+              $idFuncionario = $projeto['id_employees'];
+              if (!isset($projetosPorFuncionario[$idFuncionario])) {
+                  $projetosPorFuncionario[$idFuncionario] = array(
+                      'employee_name' => $projeto['employee_name'],
+                      'projects' => array()
+                  );
+              }
+              $projetosPorFuncionario[$idFuncionario]['projects'][] = $projeto;
+          }
+
+          // Retorna os projetos agrupados por funcionário
+          return $projetosPorFuncionario;
+      } else {
+          throw new Exception("Conexão com o banco de dados não está estabelecida.");
+      }
+  } catch (PDOException $e) {
+      echo "Erro PDO: " . $e->getMessage() . "<br>";
+      return false;
+  } catch (Exception $e) {
+      echo "Erro geral: " . $e->getMessage() . "<br>";
       return false;
   }
 }

@@ -2,33 +2,23 @@
 
 require_once '../functions/functions.php';
 
-
 // Buscar os Projetos
 $projects = searchProjectData();
 $completedProjects = handleCompletedProjectsRequest();
-//var_dump("Dados retornados da função handle: ", $completedProjects);
 
-
-
-// Dados para cadastro do projeto
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Receber os parâmetros do form
     if (isset($_POST["id_employees"]) && isset($_POST["descricao"]) && isset($_POST["valor"]) && isset($_POST["status"]) && isset($_POST["data_entrega"])) {
-        // Obter os parâmetros do formulário
         $id_employees = $_POST["id_employees"];
         $description = $_POST["descricao"];
         $value = $_POST["valor"];
         $status = $_POST["status"];
         $delivery_date = $_POST["data_entrega"];
 
-        // Chamando a função de cadastro e passando a conexão como argumento
         if (registerProject($id_employees, $description, $value, $status, $delivery_date, $db)) {
             echo "Projeto cadastrado com sucesso!";
         } else {
             echo "Erro ao cadastrar Projeto.";
         }
-    } else {
-       // echo "Por favor, preencha todos os campos do formulário.";
     }
 }
 
@@ -40,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
 <meta charset="UTF-8">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
   <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
   <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
@@ -49,22 +40,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <section>
   <h1>Cadastro de Projetos</h1>
-  <form method="post" >
+  <form method="post">
     <label for="id_employees">ID Colaborador</label>
-    <!--<input type="text" id="id_employees" name="id_employees" required><br><br>-->
     <select id="id_employees" name="id_employees" required>
         <option value="">Selecione um colaborador</option>
         <?php
-        // Buscar os dados dos funcionários
         $employees = searchEmployeeData();
-        // Verificar se a busca foi bem-sucedida
         if ($employees !== false) {
-            // Iterar sobre os funcionários e exibir as opções do select
             foreach ($employees as $employee) {
                 echo "<option value='{$employee['id']}' data-employee-name='{$employee['nome']}'>{$employee['id']} - " . utf8_encode($employee['nome']) . "</option>";
-
             }
-            
         }
         ?>
     </select>
@@ -85,8 +70,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <button type="button" id="completed_projects_button">Projetos concluídos</button>
 
-
-
+    <section>
+        <h1>Listagem de Projetos a Entregar</h1>
+        <button type="button" id="projects_to_deliver_button">Projetos a Entregar</button>
+        <div id="date_input_fields" style="display: none;">
+            <label for="start_date">Data Inicial:</label>
+            <input type="date" id="start_date" name="start_date">
+            <label for="end_date">Data Final:</label>
+            <input type="date" id="end_date" name="end_date">
+            <button type="button" id="fetch_projects_button">Buscar Projetos</button>
+        </div>
+    </section>
   </form>
 </section>
 
@@ -125,19 +119,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <script>
     $(document).ready(function() {
+
+    // Criação do DataTables
     $('#tabelaProjetos').DataTable();
 
     $('#completed_projects_button').click(function() {
-        // Limpar a tabela
         $('#tabelaProjetos').DataTable().clear().draw();
-
-        // Adicionar os dados diretamente da variável PHP à tabela DataTables
-        var completedProjectsData = <?php echo json_encode($completedProjects['data']); ?>;
-        $('#tabelaProjetos').DataTable().rows.add(completedProjectsData).draw();
-
-        // Exibir a variável no console
-        console.log(completedProjectsData);
+        $('#tabelaProjetos').DataTable().rows.add(<?php echo json_encode($completedProjects['data']); ?>).draw();
     });
+
+    $('#projects_to_deliver_button').click(function() {
+        $('#date_input_fields').toggle();
+    });
+
+    $('#fetch_projects_button').click(function() {
+    var startDate = $('#start_date').val();
+    var endDate = $('#end_date').val();
+
+    // Enviar uma requisição AJAX para buscar os projetos a entregar
+    $.post('../functions/functions.php', {
+        start_date: startDate,
+        end_date: endDate
+    }, function(response) {
+        // Verificar se há um erro
+        if (response.error) {
+            alert(response.error); // Exibir mensagem de erro
+        } else {
+            // Limpar a tabela
+            $('#tabelaProjetos').DataTable().clear().draw();
+            // Adicionar os dados retornados à tabela
+            $.each(response, function(key, value) {
+                $.each(value.projects, function(index, project) {
+                    $('#tabelaProjetos').DataTable().row.add([
+                        project.id,
+                        project.employee_name,
+                        project.description,
+                        project.value,
+                        project.status,
+                        project.delivery_date,
+                        project.created_date
+                    ]).draw();
+                });
+            });
+        }
+    }, 'json').fail(function(xhr, status, error) {
+        console.error(error);
+    });
+});
 
 });
   </script>

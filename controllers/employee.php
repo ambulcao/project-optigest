@@ -3,29 +3,29 @@
 require_once '../functions/functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Receber os parâmetros do form
-    if (isset($_POST["nome"]) && isset($_POST["idade"]) && isset($_POST["cargo"]) && isset($_POST["salario"]) && isset($_POST["data_admissao"])) {
-        // Obter os parâmetros do formulário
-        $nome = $_POST["nome"];
-        $idade = $_POST["idade"];
-        $cargo = $_POST["cargo"];
-        $salario = $_POST["salario"];
-        $dataAdmissao = $_POST["data_admissao"];
+  // Receber os parâmetros do form
+  if (isset($_POST["nome"]) && isset($_POST["idade"]) && isset($_POST["cargo"]) && isset($_POST["salario"]) && isset($_POST["data_admissao"])) {
+    // Obter os parâmetros do formulário
+    $nome = $_POST["nome"];
+    $idade = $_POST["idade"];
+    $cargo = $_POST["cargo"];
+    $salario = $_POST["salario"];
+    $dataAdmissao = $_POST["data_admissao"];
 
-        // Chamando a função como cadastro e passando a conexão como argumento
-        if (registerEmployee($db, $nome, $idade, $cargo, $salario, $dataAdmissao)) {
-            echo "Funcionário cadastrado com sucesso!";
-        } else {
-            echo "Erro ao cadastrar funcionário.";
-        }
+    // Chamando a função como cadastro e passando a conexão como argumento
+    if (registerEmployee($db, $nome, $idade, $cargo, $salario, $dataAdmissao)) {
+      echo "Funcionário cadastrado com sucesso!";
     } else {
-        echo "Por favor, preencha todos os campos do formulário.";
+      echo "Erro ao cadastrar funcionário.";
     }
+  } else {
+    echo "Por favor, preencha todos os campos do formulário.";
+  }
 }
 
 // Buscar os funcionários
 $funcionarios = searchEmployeeData();
-
+$averageAge = averageAge();
 
 ?>
 
@@ -34,8 +34,9 @@ $funcionarios = searchEmployeeData();
 <html lang="pt-br">
 
 <head>
-<meta charset="UTF-8">
+  <meta charset="UTF-8">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
   <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
   <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
@@ -43,31 +44,40 @@ $funcionarios = searchEmployeeData();
 
 <body>
 
-<section>
-  <h1>Cadastro de Funcionário</h1>
-  <form method="post" >
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" name="nome" required><br><br>
+<section class="text-center">
+    <h1>Cadastro de Empregado</h1>
+    <form method="post">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required><br><br>
 
-    <label for="idade">Idade:</label>
-    <input type="number" id="idade" name="idade" required><br><br>
+        <label for="idade">Idade:</label>
+        <input type="number" id="idade" name="idade" required><br><br>
 
-    <label for="cargo">Cargo:</label>
-    <input type="text" id="cargo" name="cargo" required><br><br>
+        <label for="cargo">Cargo:</label>
+        <input type="text" id="cargo" name="cargo" required><br><br>
 
-    <label for="salario">Salário:</label>
-    <input type="number" id="salario" name="salario" required><br><br>
+        <label for="salario">Salário:</label>
+        <input type="number" id="salario" name="salario" required><br><br>
 
-    <label for="data_admissao">Data de Admissão:</label>
-    <input type="date" id="data_admissao" name="data_admissao" required><br><br>
+        <label for="data_admissao">Data de Admissão:</label>
+        <input type="date" id="data_admissao" name="data_admissao" required><br><br>
 
-    <input type="submit" value="Cadastrar Funcionário">
+        <div class="btn-group" role="group" aria-label="Botões de Ação">
+            <input type="submit" class="btn btn-success" value="Cadastrar Funcionário">
+            <button type="button" id="averageAgeButton" class="btn btn-secondary">Idade/Média Empregados</button>
+            <button type="button" id="averageAgeButton" class="btn btn-secondary">Listar Função</button>
+            <button type="button" id="reloadButton" class="btn btn-primary">Reload</button>
+            <a href="../index.php" class="btn btn-info">Voltar a Home</a>
+        </div>
 
-  </form>
+        <div class="text-center mt-3">
+            <span id="averageAge" style="display: none; font-size: 22px; color: red; font-weight: bold;"><?php echo number_format($averageAge, 1); ?></span>
+        </div>
+    </form>
 </section>
 
   <div class="container centralizar-pagina">
-    <h1>Cadastro e Visualização de Funcionários</h1>
+    <h1 class="text-center">Visualização de Empregados</h1>
 
     <table id="tabelaFuncionarios" class="display">
       <thead>
@@ -99,6 +109,16 @@ $funcionarios = searchEmployeeData();
     $(document).ready(function() {
       $('#tabelaFuncionarios').DataTable();
     });
+
+    $(document).ready(function() {
+    $("#averageAgeButton").click(function() {
+        $("#averageAge").show();
+    });
+});
+
+document.getElementById("reloadButton").addEventListener("click", function() {
+    location.reload();
+});
   </script>
 
 </body>
