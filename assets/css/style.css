@@ -4,64 +4,56 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background-color: rgb(168, 230, 235);
+    background-color: rgb(209, 192, 240);
     border: none;
     display: flex;
-    /* Ativa Flexbox */
     flex-direction: column;
-    /* Organiza os elementos na vertical */
     align-items: center;
-    /* Alinha horizontalmente ao centro */
     justify-content: center;
-    /* Alinha verticalmente ao centro */
     min-height: 100vh;
-    /* Altura mínima da página para garantir centralização */
 }
 
 .conteudo {
     padding: 20px;
-    /* Espaçamento interno */
     background-color: #fff;
-    /* Cor de fundo branca para o conteúdo */
     border-radius: 5px;
-    /* Arredondamento dos cantos */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /* Sombra leve */
 }
-
-
-/* Ajuste a largura do container se necessário */
 
 .container-fluid {
     max-width: 100%;
-    /* Defina a largura máxima como 100% para ocupar toda a largura disponível */
 }
-
-
-/* Estilo da marca na barra de navegação */
 
 .navbar-brand {
     font-weight: bold;
-    /* Opcional: adicione peso ao nome da marca */
 }
-
-
-/* Estilos para tornar os botões de rádio responsivos */
 
 .botao-radio {
     display: block;
     text-align: center;
     margin-bottom: 10px;
-    /* Espaçamento entre os botões */
 }
 
 .botao-radio img {
     width: 100%;
-    /* Defina a largura da imagem como 50% do contêiner pai */
     max-width: 250px;
-    /* Defina uma largura máxima para a imagem */
 }
 
 .botao-radio span {
     display: block;
+}
+
+.form-section {
+    display: inline;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 300px;
+}
+
+.form-section div {
+    margin-bottom: 10px;
+}
+
+.form-section label {
+    margin-bottom: 5px;
 }

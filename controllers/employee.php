@@ -14,9 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Chamando a função como cadastro e passando a conexão como argumento
     if (registerEmployee($db, $nome, $idade, $cargo, $salario, $dataAdmissao)) {
-      echo "Funcionário cadastrado com sucesso!";
+      echo "Empregado cadastrado com sucesso!";
     } else {
-      echo "Erro ao cadastrar funcionário.";
+      echo "Erro ao cadastrar Empregado.";
     }
   } else {
     echo "Por favor, preencha todos os campos do formulário.";
@@ -26,9 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Buscar os funcionários
 $funcionarios = searchEmployeeData();
 $averageAge = averageAge();
+$employeesJob = listEmployeesByJob();
 
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -63,19 +63,57 @@ $averageAge = averageAge();
         <input type="date" id="data_admissao" name="data_admissao" required><br><br>
 
         <div class="btn-group" role="group" aria-label="Botões de Ação">
-            <input type="submit" class="btn btn-success" value="Cadastrar Funcionário">
-            <button type="button" id="averageAgeButton" class="btn btn-secondary">Idade/Média Empregados</button>
-            <button type="button" id="averageAgeButton" class="btn btn-secondary">Listar Função</button>
-            <button type="button" id="reloadButton" class="btn btn-primary">Reload</button>
-            <a href="../index.php" class="btn btn-info">Voltar a Home</a>
+    <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
+        <input type="submit" class="btn btn-success" value="Cadastrar Funcionário">
+    </div>
+    <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
+        <button type="button" id="averageAgeButton" class="btn btn-secondary">Idade/Média Empregados</button>
+    </div>
+    <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
+        <button type="button" id="listEmployeeJob" class="btn btn-secondary">Listar Função</button>
+    </div>
+
+    <section>
+    <div class="mt-3 mb-3" role="group" aria-label="Botões de Ação" style="margin-right: 0.4rem;">
+        <!-- Botão para revelar os campos de entrada -->
+        <button type="button" id="calculateButton" class="btn btn-secondary">Calcular</button>
+    </div>
+
+    <div id="inputFields" style="display: none; width: 100%">
+        <div>
+            <div>
+                <input type="text" id="salario"  class="form-control" placeholder="Salário" required>
+            </div>
+            <div style="display: flex;">
+                <input type="text" id="porcentagem"  class="form-control" placeholder="Porcentagem" required>
+                <button type="button" id="calculateResult" class="btn btn-secondary ml-2">=</button>
+            </div>
         </div>
 
-        <div class="text-center mt-3">
-            <span id="averageAge" style="display: none; font-size: 22px; color: red; font-weight: bold;"><?php echo number_format($averageAge, 1); ?></span>
+        <div>
+            <span id="resultado"></span>
+        </div>
+    </div>
+</section>
+
+
+
+    <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
+        <button type="button" id="reloadButton" class="btn btn-primary">Reload</button>
+    </div>
+    <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
+        <a href="../index.php" class="btn btn-info">Voltar a Home</a>
+    </div>
+</div>
+
+
+        <div class="text-center mb-2">
+            <span id="averageAge" style="display: none; font-size: 40px; color: red; font-weight: bold; margin-right: 10rem;"><?php echo number_format($averageAge, 1); ?></span>
         </div>
     </form>
 </section>
 
+<section class="Datatbl">
   <div class="container centralizar-pagina">
     <h1 class="text-center">Visualização de Empregados</h1>
 
@@ -104,10 +142,42 @@ $averageAge = averageAge();
       </tbody>
     </table>
   </div>
+</section>
 
-  <script type="text/javascript">
+<div id="employeeTableContainer" style="margin-top: 20px; display: none;">
+    <table id="novaTabelaFuncionarios" class="display">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Idade</th>
+          <th>Cargo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        // Verifique se há dados retornados
+        if (!empty($employeesJob['data'])) {
+            // Itere sobre os dados e crie as linhas da tabela
+            foreach ($employeesJob['data'] as $funcionario) {
+                echo '<tr>';
+                echo '<td>' . utf8_encode($funcionario['name']) . '</td>';
+                echo '<td>' . $funcionario['age'] . '</td>';
+                echo '<td>' . utf8_encode($funcionario['job']) . '</td>';
+                echo '</tr>';
+            }
+        } else {
+            // Se não houver dados, exiba uma mensagem na tabela
+            echo '<tr><td colspan="3">Nenhum funcionário encontrado.</td></tr>';
+        }
+        ?>
+      </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
     $(document).ready(function() {
       $('#tabelaFuncionarios').DataTable();
+      $('#novaTabelaFuncionarios').DataTable();
     });
 
     $(document).ready(function() {
@@ -119,7 +189,44 @@ $averageAge = averageAge();
 document.getElementById("reloadButton").addEventListener("click", function() {
     location.reload();
 });
-  </script>
+
+$('#listEmployeeJob').click(function() {
+    $('.Datatbl').hide();
+    $('#employeeTableContainer').show();
+});
+
+document.getElementById("calculateButton").addEventListener("click", function() {
+    // Mostrar os campos de entrada quando o botão é clicado
+    document.getElementById("inputFields").style.display = "block";
+});
+
+document.getElementById("calculateButton").addEventListener("click", function() {
+    // Mostrar os campos de entrada quando o botão é clicado
+    document.getElementById("inputFields").style.display = "block";
+});
+
+document.getElementById("calculateResult").addEventListener("click", function() {
+    // Obter os valores dos campos de entrada
+    var salario = parseFloat(document.getElementById("salario").value);
+    var porcentagem = parseFloat(document.getElementById("porcentagem").value);
+
+    // Verificar se os valores são válidos
+    if (isNaN(salario) || isNaN(porcentagem) || salario <= 0 || porcentagem <= 0) {
+        document.getElementById("resultado").textContent = "Erro: Valores inválidos";
+    } else {
+        // Calcular o novo salário
+        var novoSalario = salario * (1 + (porcentagem / 100));
+        document.getElementById("resultado").textContent = "=" + novoSalario.toFixed(2);
+    }
+});
+
+
+
+
+
+
+
+</script>
 
 </body>
 

@@ -36,16 +36,16 @@ if (isset($routes[$uri]) && (empty($routes[$uri]['method']) || $routes[$uri]['me
 
   <div class="row">
 
-    <div class="col-md-6">
+    <div class="col-md-6 text-center">
     <a href="./controllers/employee.php" class="nav-link">
       <label for="funcionario-radio" class="botao-radio">
-        <img src="https://cdn.iconscout.com/icon/premium/png-512-thumb/about-1568812-1326392.png?f=webp&w=256" alt="Funcionário"></br>
+        <img src="./assets/image/employee-preview.png" alt="Funcionário"></br>
        
-      </label>
+      </label >
       Register Employee</a>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-6 text-center">
     <a href="./controllers/project.php" class="nav-link">
       <label for="projeto-radio" class="botao-radio">
         <img src="./assets/image/project-preview.png" alt="Projeto"></br>
@@ -53,21 +53,6 @@ if (isset($routes[$uri]) && (empty($routes[$uri]['method']) || $routes[$uri]['me
       Register Project</a>
     </div>
 
-  </div>
-
-  <div class="row">
-    <div class="col-md-6">
-      <label for="alocar-radio" class="botao-radio">
-        <img src="https://cdn.iconscout.com/icon/premium/png-512-thumb/about-1568812-1326392.png?f=webp&w=256" alt="Alocar"></br>
-        <span>Alocar Funcionário ao Projeto</span>
-      </label>
-    </div>
-    <div class="col-md-6">
-      <label for="sobre-radio" class="botao-radio">
-        <img src="https://cdn.iconscout.com/icon/premium/png-512-thumb/about-1568812-1326392.png?f=webp&w=256" alt="Sobre"></br>
-        <span>Sobre</span>
-      </label>
-    </div>
   </div>
 </div>
 
