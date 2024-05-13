@@ -134,12 +134,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <tbody>
         <?php foreach ($projects as $project) : ?>
           <tr>
-            <td><?php echo $project['id']; ?></td>
+          <td><?php echo $project['id']; ?></td>
             <td><?php echo isset($project['id_employees']) ? $project['id_employees'] : ''; ?></td>
-            <td><?php echo utf8_encode($project['employee_name']); ?></td>
-            <td><?php echo isset($project['description']) ? utf8_encode($project['description']) : ''; ?></td>
+            <td><?php echo $project['employee_name']; ?></td>
+            <td><?php echo isset($project['description']) ? $project['description'] : ''; ?></td>
             <td><?php echo isset($project['value']) ? $project['value'] : ''; ?></td>
-            <td><?php echo isset($project['status']) ? utf8_encode($project['status']) : ''; ?></td>
+            <td><?php echo isset($project['status']) ? $project['status'] : ''; ?></td>
             <td><?php echo isset($project['delivery_date']) ? $project['delivery_date'] : ''; ?></td>
             <td><?php echo isset($project['created_date']) ? $project['created_date'] : ''; ?></td>
           </tr>
@@ -168,10 +168,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <tr>
                     <td><?php echo $project['id']; ?></td>
                     <td><?php echo isset($project['id_employees']) ? $project['id_employees'] : ''; ?></td>
-                    <td><?php echo utf8_encode($project['employee_name']); ?></td>
-                    <td><?php echo isset($project['description']) ? utf8_encode($project['description']) : ''; ?></td>
+                    <td><?php echo $project['employee_name']; ?></td>
+                    <td><?php echo isset($project['description']) ? $project['description'] : ''; ?></td>
                     <td><?php echo isset($project['value']) ? $project['value'] : ''; ?></td>
-                    <td><?php echo isset($project['status']) ? utf8_encode($project['status']) : ''; ?></td>
+                    <td><?php echo isset($project['status']) ? $project['status'] : ''; ?></td>
                     <td><?php echo isset($project['delivery_date']) ? $project['delivery_date'] : ''; ?></td>
                     <td><?php echo isset($project['created_date']) ? $project['created_date'] : ''; ?></td>
                 </tr>

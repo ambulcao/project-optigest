@@ -261,10 +261,10 @@ function handleCompletedProjectsRequest()
           $data[] = array(
             $project['id'],
             $project['id_employees'],
-            utf8_encode($project['employee_name']),
-            utf8_encode($project['description']),
+            $project['employee_name'],
+            $project['description'],
             $project['value'],
-            utf8_encode($project['status']),
+            $project['status'],
             $project['delivery_date'],
             $project['created_date']
           );

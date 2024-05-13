@@ -42,7 +42,7 @@ if (isset($routes[$uri]) && (empty($routes[$uri]['method']) || $routes[$uri]['me
         <img src="./assets/image/employee-preview.png" alt="Funcionário"></br>
        
       </label >
-      Register Employee</a>
+      Registar Colaborador</a>
     </div>
 
     <div class="col-md-6 text-center">
@@ -50,7 +50,7 @@ if (isset($routes[$uri]) && (empty($routes[$uri]['method']) || $routes[$uri]['me
       <label for="projeto-radio" class="botao-radio">
         <img src="./assets/image/project-preview.png" alt="Projeto"></br>
       </label>
-      Register Project</a>
+      Registrar Projeto</a>
     </div>
 
   </div>

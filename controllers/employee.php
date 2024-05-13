@@ -45,7 +45,7 @@ $employeesJob = listEmployeesByJob();
 <body>
 
 <section class="text-center">
-    <h1>Cadastro de Empregado</h1>
+    <h1>Cadastro de Colaborador</h1>
     <form method="post">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" required><br><br>
@@ -64,13 +64,13 @@ $employeesJob = listEmployeesByJob();
 
         <div class="btn-group" role="group" aria-label="Botões de Ação">
     <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
-        <input type="submit" class="btn btn-success" value="Cadastrar Funcionário">
+        <input type="submit" class="btn btn-success" value="Cadastrar Colaborador">
     </div>
     <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
-        <button type="button" id="averageAgeButton" class="btn btn-secondary">Idade/Média Empregados</button>
+        <button type="button" id="averageAgeButton" class="btn btn-secondary">Idade/Média Colaborador</button>
     </div>
     <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
-        <button type="button" id="listEmployeeJob" class="btn btn-secondary">Listar Função</button>
+        <button type="button" id="listEmployeeJob" class="btn btn-secondary">Listar Funções</button>
     </div>
 
     <section>
@@ -115,7 +115,7 @@ $employeesJob = listEmployeesByJob();
 
 <section class="Datatbl">
   <div class="container centralizar-pagina">
-    <h1 class="text-center">Visualização de Empregados</h1>
+    <h1 class="text-center">Visualização de Colaboradores</h1>
 
     <table id="tabelaFuncionarios" class="display">
       <thead>
@@ -132,9 +132,9 @@ $employeesJob = listEmployeesByJob();
         <?php foreach ($funcionarios as $funcionario) : ?>
           <tr>
             <td><?php echo $funcionario['id']; ?></td>
-            <td><?php echo isset($funcionario['nome']) ? utf8_encode($funcionario['nome']) : ''; ?></td>
+            <td><?php echo isset($funcionario['nome']) ? $funcionario['nome'] : ''; ?></td>
             <td><?php echo isset($funcionario['age']) ? $funcionario['age'] : ''; ?></td>
-            <td><?php echo isset($funcionario['job']) ? utf8_encode($funcionario['job']) : ''; ?></td>
+            <td><?php echo isset($funcionario['job']) ? $funcionario['job'] : ''; ?></td>
             <td><?php echo isset($funcionario['salary']) ? $funcionario['salary'] : ''; ?></td>
             <td><?php echo isset($funcionario['admission_date']) ? $funcionario['admission_date'] : ''; ?></td>
           </tr>
@@ -160,9 +160,9 @@ $employeesJob = listEmployeesByJob();
             // Itere sobre os dados e crie as linhas da tabela
             foreach ($employeesJob['data'] as $funcionario) {
                 echo '<tr>';
-                echo '<td>' . utf8_encode($funcionario['name']) . '</td>';
+                echo '<td>' . $funcionario['name'] . '</td>';
                 echo '<td>' . $funcionario['age'] . '</td>';
-                echo '<td>' . utf8_encode($funcionario['job']) . '</td>';
+                echo '<td>' . $funcionario['job'] . '</td>';
                 echo '</tr>';
             }
         } else {
