@@ -6,32 +6,25 @@ require_once '../functions/functions.php';
 $projects = searchProjectData();
 $completedProjects = handleCompletedProjectsRequest();
 
-// Verificar se há uma requisição POST para buscar projetos entre datas
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["start_date"]) && isset($_POST["end_date"])) {
-    $start_date = $_POST["start_date"];
-    $end_date = $_POST["end_date"];
-
-    // Buscar projetos entre as datas especificadas
-    $projectsToDeliver = searchProjectsBetweenDates($start_date, $end_date);
-
-    // Retornar os projetos encontrados como JSON
-    echo json_encode($projectsToDeliver);
-    exit; // Terminar o script após enviar a resposta JSON
-}
-
+// Verificar se a requisição é do tipo POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Verifica se todos os campos foram preenchidos
     if (isset($_POST["id_employees"]) && isset($_POST["descricao"]) && isset($_POST["valor"]) && isset($_POST["status"]) && isset($_POST["data_entrega"])) {
+        // Obtém os valores dos campos
         $id_employees = $_POST["id_employees"];
-        $description = $_POST["descricao"];
-        $value = $_POST["valor"];
+        $descricao = $_POST["descricao"];
+        $valor = $_POST["valor"];
         $status = $_POST["status"];
-        $delivery_date = $_POST["data_entrega"];
+        $data_entrega = $_POST["data_entrega"];
 
-        if (registerProject($id_employees, $description, $value, $status, $delivery_date, $db)) {
-            echo "Projeto cadastrado com sucesso!";
+        // Chama a função de cadastro de projeto passando os parâmetros corretos
+        if (registerProject($id_employees, $descricao, $valor, $status, $data_entrega, $db)) {
+            $success_message = "Projeto cadastrado com sucesso!";
         } else {
-            echo "Erro ao cadastrar Projeto.";
+            $error_message = "Erro ao cadastrar Projeto.";
         }
+    } else {
+        $error_message = "Por favor, preencha todos os campos do formulário.";
     }
 }
 
@@ -56,44 +49,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <h1>Cadastro de Projetos</h1><br>
   <form method="post">
   <section class="form-section text-left">
-    <div>
-        <label for="id_employees">ID Colaborador</label>
-        <select id="id_employees" name="id_employees" required>
-            <option value="">Selecione um colaborador</option>
-            <?php
-            $employees = searchEmployeeData();
-            if ($employees !== false) {
-                foreach ($employees as $employee) {
-                    echo "<option value='{$employee['id']}' data-employee-name='{$employee['nome']}'>{$employee['id']} - " . utf8_encode($employee['nome']) . "</option>";
+        <div>
+            <label for="id_employees">ID Colaborador</label>
+            <select id="id_employees" name="id_employees" required>
+                <option value="">Selecione um colaborador</option>
+                <?php
+                $employees = searchEmployeeData();
+                if ($employees !== false) {
+                    foreach ($employees as $employee) {
+                        echo "<option value='{$employee['id']}' data-employee-name='{$employee['nome']}'>{$employee['id']} - " . utf8_encode($employee['nome']) . "</option>";
+                    }
                 }
-            }
-            ?>
-        </select>
-    </div>
-    <br>
-    <div>
-        <label for="descricao">Descrição</label>
-        <input type="text" id="descricao" name="descricao" required>
-    </div>
-    <br>
-    <div>
-        <label for="valor">Valor</label>
-        <input type="text" id="valor" name="valor" required>
-    </div>
-    <br>
-    <div>
-        <label for="status">Status</label>
-        <input type="text" id="status" name="status" required>
-    </div>
-    <br>
-    <div>
-        <label for="data_entrega">Data de Entrega</label>
-        <input type="date" id="data_entrega" name="data_entrega" required>
-    </div>
-    <br>
-</section><br>
+                ?>
+            </select>
+        </div>
+        <br>
+        <div>
+            <label for="descricao">Descrição</label>
+            <input type="text" id="descricao" name="descricao" required>
+        </div>
+        <br>
+        <div>
+            <label for="valor">Valor</label>
+            <input type="text" id="valor" name="valor" required>
+        </div>
+        <br>
+        <div>
+            <label for="status">Status</label>
+            <input type="text" id="status" name="status" required>
+        </div>
+        <br>
+        <div>
+            <label for="data_entrega">Data de Entrega</label>
+            <input type="date" id="data_entrega" name="data_entrega" required>
+        </div>
+        <br>
+        <input type="submit" class="btn btn-success" value="Cadastrar Projeto">
+        <?php
+        if (isset($success_message)) {
+            echo "<p style='color: green;'>$success_message</p>";
+        } elseif(isset($error_message) && $error_message !== "Por favor, preencha as datas inicial e final.") {
+            echo "<p style='color: red;'>$error_message</p>";
+        }
+        ?>
+    </section><br>
 
-    <input type="submit" class="btn btn-success" value="Cadastrar Projeto">
+    
 
     <button type="button" class="btn btn-secondary" id="completed_projects_button">Projetos concluídos</button>
 
