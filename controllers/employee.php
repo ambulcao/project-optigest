@@ -35,10 +35,12 @@ $employeesJob = listEmployeesByJob();
 
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="../assets/css/style.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
   <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet">
   <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/inputmask/5.0.7/js/inputmask.min.js"></script>
 
 </head>
 
@@ -82,9 +84,10 @@ $employeesJob = listEmployeesByJob();
     <div id="inputFields" style="display: none; width: 100%">
         <div>
             <div>
-                <input type="text" id="salario"  class="form-control" placeholder="Salário" required>
+                <input type="text" id="salarioId"  class="form-control" placeholder="Salário" required style="display: none;">
             </div>
             <div style="display: flex;">
+              <input type="text" id="valor"  class="form-control" placeholder="Salário" required>
                 <input type="text" id="porcentagem"  class="form-control" placeholder="Porcentagem" required>
                 <button type="button" id="calculateResult" class="btn btn-secondary ml-2">=</button>
             </div>
@@ -114,7 +117,7 @@ $employeesJob = listEmployeesByJob();
 </section>
 
 <section class="Datatbl">
-  <div class="container centralizar-pagina">
+  <div class="container">
     <h1 class="text-center">Visualização de Colaboradores</h1>
 
     <table id="tabelaFuncionarios" class="display">
@@ -195,30 +198,30 @@ $('#listEmployeeJob').click(function() {
     $('#employeeTableContainer').show();
 });
 
-document.getElementById("calculateButton").addEventListener("click", function() {
-    // Mostrar os campos de entrada quando o botão é clicado
-    document.getElementById("inputFields").style.display = "block";
-});
 
-document.getElementById("calculateButton").addEventListener("click", function() {
-    // Mostrar os campos de entrada quando o botão é clicado
-    document.getElementById("inputFields").style.display = "block";
-});
 
-document.getElementById("calculateResult").addEventListener("click", function() {
-    // Obter os valores dos campos de entrada
-    var salario = parseFloat(document.getElementById("salario").value);
-    var porcentagem = parseFloat(document.getElementById("porcentagem").value);
+// Função para exibir os campos de entrada quando o botão "Calcular" é clicado
+document.getElementById('calculateButton').addEventListener('click', function() {
+            document.getElementById('inputFields').style.display = 'block';
+        });
 
-    // Verificar se os valores são válidos
-    if (isNaN(salario) || isNaN(porcentagem) || salario <= 0 || porcentagem <= 0) {
-        document.getElementById("resultado").textContent = "Erro: Valores inválidos";
-    } else {
-        // Calcular o novo salário
-        var novoSalario = salario * (1 + (porcentagem / 100));
-        document.getElementById("resultado").textContent = "=" + novoSalario.toFixed(2);
-    }
-});
+        // Função para calcular o novo salário
+        function calcularSalario() {
+            // Obter os valores dos campos de entrada
+            var salario = parseInt(document.getElementById('salario').value);
+            var valor = parseInt(document.getElementById('valor').value);
+            var porcentagem = parseFloat(document.getElementById('porcentagem').value);
+
+            // Calcular o novo salário
+            var novoSalario = salario * (1 + (porcentagem / 100));
+            var novoSalario = valor * (1 + (porcentagem / 100));
+
+            // Exibir o resultado
+            document.getElementById('resultado').innerText = 'Novo Salário: R$ ' + novoSalario.toFixed(2);
+        }
+
+        // Adicionar evento de clique ao botão "="
+        document.getElementById('calculateResult').addEventListener('click', calcularSalario);
 
 
 

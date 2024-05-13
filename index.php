@@ -30,8 +30,10 @@ if (isset($routes[$uri]) && (empty($routes[$uri]['method']) || $routes[$uri]['me
 </head>
 
 <body>
+  <section class="container">
+
   <div class="container centralizar-pagina">
-    <h1 class="conteudo">Employee and Project Management</h1>
+    <h1 class="conteudo">Gerenciamento Integrado de Equipes e Projetos</h1>
     <div class="container-botoes-radio">
 
   <div class="row">
@@ -53,10 +55,18 @@ if (isset($routes[$uri]) && (empty($routes[$uri]['method']) || $routes[$uri]['me
       Registrar Projeto</a>
     </div>
 
+    <div class="text-center content-imagem">
+    <img  src="https://media.licdn.com/dms/image/C4D12AQFki-utNj2flg/article-cover_image-shrink_600_2000/0/1600197417916?e=2147483647&v=beta&t=JdUwOBDQRd7FWGZ0qq6KXC21GbDOBExvyROq1wbdcXA"/>
+  </div>
   </div>
 </div>
 
   </div>
+
+  
+
+  </section>
+  
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
