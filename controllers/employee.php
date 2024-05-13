@@ -14,9 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       // Chama a função de cadastro de colaborador passando os parâmetros
       if (registerEmployee($nome, $idade, $cargo, $salario, $data_admissao, $db)) {
-          echo "<p style='color: green;'>Empregado cadastrado com sucesso!</p>";
+          $success_message = "Colaborador cadastrado com sucesso!";
       } else {
-          echo "<p style='color: red;'>Erro ao cadastrar Empregado.</p>";
+          echo "<p style='color: red;'>Erro ao cadastrar Colaborador.</p>";
       }
   } else {
       echo "<p style='color: red;'>Por favor, preencha todos os campos do formulário.</p>";
@@ -64,10 +64,21 @@ $employeesJob = listEmployeesByJob();
         <label for="data_admissao">Data de Admissão:</label>
         <input type="date" id="data_admissao" name="data_admissao" required><br><br>
 
-        <div class="btn-group" role="group" aria-label="Botões de Ação">
-        <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($success_message)) {
+            echo "<p style='color: green;'>$success_message</p>";
+        }
+    }
+    ?>
+     <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
           <input type="submit" class="btn btn-success" value="Cadastrar Colaborador">
         </div>
+
+        </form>
+        <div class="btn-group" role="group" aria-label="Botões de Ação">
+       
+      
     <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
         <button type="button" id="averageAgeButton" class="btn btn-secondary">Idade/Média Colaborador</button>
     </div>
@@ -83,12 +94,9 @@ $employeesJob = listEmployeesByJob();
 
     <div id="inputFields" style="display: none; width: 100%">
         <div>
-            <div>
-                <input type="text" id="salarioId"  class="form-control" placeholder="Salário" required style="display: none;">
-            </div>
             <div style="display: flex;">
-              <input type="text" id="valor"  class="form-control" placeholder="Salário" required>
-                <input type="text" id="porcentagem"  class="form-control" placeholder="Porcentagem" required>
+              <input type="text" id="valor"  class="form-control" placeholder="Salário">
+                <input type="text" id="porcentagem"  class="form-control" placeholder="Porcentagem">
                 <button type="button" id="calculateResult" class="btn btn-secondary ml-2">=</button>
             </div>
         </div>
@@ -113,7 +121,7 @@ $employeesJob = listEmployeesByJob();
         <div class="text-center mb-2">
             <span id="averageAge" style="display: none; font-size: 40px; color: red; font-weight: bold; margin-right: 10rem;"><?php echo number_format($averageAge, 1); ?></span>
         </div>
-    </form>
+    
 </section>
 
 <section class="Datatbl">
@@ -208,12 +216,10 @@ document.getElementById('calculateButton').addEventListener('click', function() 
         // Função para calcular o novo salário
         function calcularSalario() {
             // Obter os valores dos campos de entrada
-            var salario = parseInt(document.getElementById('salario').value);
             var valor = parseInt(document.getElementById('valor').value);
             var porcentagem = parseFloat(document.getElementById('porcentagem').value);
 
             // Calcular o novo salário
-            var novoSalario = salario * (1 + (porcentagem / 100));
             var novoSalario = valor * (1 + (porcentagem / 100));
 
             // Exibir o resultado
