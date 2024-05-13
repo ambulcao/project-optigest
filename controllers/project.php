@@ -47,8 +47,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <section class="text-center">
   <h1>Cadastro de Projetos</h1><br>
-  <form method="post">
-  <section class="form-section text-left">
+  <form method="post" id="projectForm">
+  
         <div>
             <label for="id_employees">ID Colaborador</label>
             <select id="id_employees" name="id_employees" required>
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $employees = searchEmployeeData();
                 if ($employees !== false) {
                     foreach ($employees as $employee) {
-                        echo "<option value='{$employee['id']}' data-employee-name='{$employee['nome']}'>{$employee['id']} - " . utf8_encode($employee['nome']) . "</option>";
+                        echo "<option value='{$employee['id']}' data-employee-name='{$employee['nome']}'>{$employee['id']} - " . $employee['nome'] . "</option>";
                     }
                 }
                 ?>
@@ -84,7 +84,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="date" id="data_entrega" name="data_entrega" required>
         </div>
         <br>
-        <input type="submit" class="btn btn-success" value="Cadastrar Projeto">
+        
+
+        <div id="successMessage">
+
         <?php
         if (isset($success_message)) {
             echo "<p style='color: green;'>$success_message</p>";
@@ -92,9 +95,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<p style='color: red;'>$error_message</p>";
         }
         ?>
-    </section><br>
+        </div>
+
+        <input type="submit" class="btn btn-success" value="Cadastrar Projeto">
+        </form>
+    <br>
 
     
+    <button type="button" class="btn btn-secondary" id="total_projects_button">Total de Projetos</button>
 
     <button type="button" class="btn btn-secondary" id="completed_projects_button">Projetos concluídos</button>
 
@@ -113,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <button type="button" class="btn btn-secondary" id="fetch_projects_button">Buscar Projetos</button>
         </div>
     </section>
-  </form>
+  
 </section class="text-center">
 <section class="tblDataProject">
 <div class="">
@@ -188,14 +196,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Criação do DataTables
     $('#tabelaProjetos').DataTable();
 
+    $(document).ready(function() {
+        $("#total_projects_button").click(function() {
+            location.reload();
+        });
+    });
+
     $('#completed_projects_button').click(function() {
         $('#tabelaProjetos').DataTable().clear().draw();
         $('#tabelaProjetos').DataTable().rows.add(<?php echo json_encode($completedProjects['data']); ?>).draw();
     });
 
-    document.getElementById("reloadButton").addEventListener("click", function() {
-    location.reload();
-});
+    $(document).ready(function() {
+        $("#reloadButton").click(function() {
+            $("#projectForm")[0].reset(); 
+            $("#id_employees").focus();
+            $("#successMessage").hide();
+        });
+    });
 
     $('#projects_to_deliver_button').click(function() {
         $('#date_input_fields').toggle();

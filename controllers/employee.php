@@ -48,7 +48,7 @@ $employeesJob = listEmployeesByJob();
 
 <section class="text-center">
     <h1>Cadastro de Colaborador</h1>
-    <form method="post">
+    <form method="post" id="employeeForm">
         <label for="nome">Nome:</label>
         <input type="text" id="nome" name="nome" required><br><br>
 
@@ -64,6 +64,7 @@ $employeesJob = listEmployeesByJob();
         <label for="data_admissao">Data de Admissão:</label>
         <input type="date" id="data_admissao" name="data_admissao" required><br><br>
 
+    <div id="successMessage">
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (isset($success_message)) {
@@ -71,6 +72,9 @@ $employeesJob = listEmployeesByJob();
         }
     }
     ?>
+    </div>
+
+
      <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
           <input type="submit" class="btn btn-success" value="Cadastrar Colaborador">
         </div>
@@ -197,9 +201,13 @@ $employeesJob = listEmployeesByJob();
     });
 });
 
-document.getElementById("reloadButton").addEventListener("click", function() {
-    location.reload();
-});
+$(document).ready(function() {
+        $("#reloadButton").click(function() {
+            $("#employeeForm")[0].reset(); 
+            $("#nome").focus();
+            $("#successMessage").hide();
+        });
+    });
 
 $('#listEmployeeJob').click(function() {
     $('.Datatbl').hide();
