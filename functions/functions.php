@@ -61,41 +61,41 @@ function searchEmployeeData()
  * Função Cadastrar Employees
  */
 
-function registerEmployee($nome, $idade, $cargo, $salario, $dataAdmissao, PDO $db)
-{
-  try {
-    // Validação básica de dados (opcional, mas recomendado)
-    if (empty($nome) || !is_numeric($idade) || empty($cargo) || !is_numeric($salario) || !strtotime($dataAdmissao)) {
-      throw new Exception("Dados inválidos para cadastro de funcionário.");
-    }
-
-    // Prepara a consulta SQL utilizando prepared statements
-    $stmt = $db->prepare("INSERT INTO employees (name, age, job, salary, admission_date) VALUES (:name, :age, :job, :salary, :admission_date)");
-
-    // Vincula os valores dos parâmetros aos marcadores de posição
-    $stmt->bindParam(':name', $nome);
-    $stmt->bindParam(':age', $idade);
-    $stmt->bindParam(':job', $cargo);
-    $stmt->bindParam(':salary', $salario);
-    $stmt->bindParam(':admission_date', $dataAdmissao);
-
-    // Executa a consulta para inserir o funcionário
-    $stmt->execute();
-
-    // Verifica se a inserção foi bem-sucedida
-    if ($stmt->rowCount() > 0) {
-      return true; // Retorna true em caso de sucesso
-    } else {
-      return false; // Retorna false em caso de falha
-    }
-  } catch (PDOException $e) {
-    echo "Erro ao cadastrar funcionário: " . $e->getMessage(); // Exibe mensagem de erro em caso de exceção
-    return false; // Retorna false em caso de exceção
-  } catch (Exception $e) {
-    echo "Erro: " . $e->getMessage(); // Exibe mensagem de erro de validação (opcional)
-    return false; // Retorna false em caso de exceção
-  }
-}
+ function registerEmployee($nome, $idade, $cargo, $salario, $data_admissao, PDO $db)
+ {
+     try {
+         // Validação básica dos dados
+         if (empty($nome) || empty($idade) || empty($cargo) || empty($salario) || empty($data_admissao)) {
+             throw new Exception("Por favor, preencha todos os campos.");
+         }
+ 
+         // Prepara a consulta SQL para inserir o colaborador
+         $stmt = $db->prepare("INSERT INTO employees (name, age, job, salary, admission_date) VALUES (:name, :age, :job, :salary, :admission_date)");
+ 
+         // Vincula os valores dos parâmetros aos marcadores de posição
+         $stmt->bindParam(':name', $nome);
+         $stmt->bindParam(':age', $idade);
+         $stmt->bindParam(':job', $cargo);
+         $stmt->bindParam(':salary', $salario);
+         $stmt->bindParam(':admission_date', $data_admissao);
+ 
+         // Executa a consulta para inserir o colaborador
+         $stmt->execute();
+ 
+         // Verifica se a inserção foi bem-sucedida
+         if ($stmt->rowCount() > 0) {
+             return true; // Retorna true em caso de sucesso
+         } else {
+             return false; // Retorna false em caso de falha
+         }
+     } catch (PDOException $e) {
+         echo "Erro ao cadastrar colaborador: " . $e->getMessage();
+         return false; // Retorna false em caso de erro
+     } catch (Exception $e) {
+         echo "Erro: " . $e->getMessage(); // Exibe mensagem de erro de validação
+         return false; // Retorna false em caso de erro de validação
+     }
+ }
 
 
 /**

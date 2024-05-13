@@ -3,23 +3,23 @@
 require_once '../functions/functions.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Receber os parâmetros do form
+  // Verifica se todos os campos do formulário foram preenchidos
   if (isset($_POST["nome"]) && isset($_POST["idade"]) && isset($_POST["cargo"]) && isset($_POST["salario"]) && isset($_POST["data_admissao"])) {
-    // Obter os parâmetros do formulário
-    $nome = $_POST["nome"];
-    $idade = $_POST["idade"];
-    $cargo = $_POST["cargo"];
-    $salario = $_POST["salario"];
-    $dataAdmissao = $_POST["data_admissao"];
+      // Obtém os valores dos campos do formulário
+      $nome = $_POST["nome"];
+      $idade = $_POST["idade"];
+      $cargo = $_POST["cargo"];
+      $salario = $_POST["salario"];
+      $data_admissao = $_POST["data_admissao"];
 
-    // Chamando a função como cadastro e passando a conexão como argumento
-    if (registerEmployee($db, $nome, $idade, $cargo, $salario, $dataAdmissao)) {
-      echo "Empregado cadastrado com sucesso!";
-    } else {
-      echo "Erro ao cadastrar Empregado.";
-    }
+      // Chama a função de cadastro de colaborador passando os parâmetros
+      if (registerEmployee($nome, $idade, $cargo, $salario, $data_admissao, $db)) {
+          echo "<p style='color: green;'>Empregado cadastrado com sucesso!</p>";
+      } else {
+          echo "<p style='color: red;'>Erro ao cadastrar Empregado.</p>";
+      }
   } else {
-    echo "Por favor, preencha todos os campos do formulário.";
+      echo "<p style='color: red;'>Por favor, preencha todos os campos do formulário.</p>";
   }
 }
 
@@ -65,9 +65,9 @@ $employeesJob = listEmployeesByJob();
         <input type="date" id="data_admissao" name="data_admissao" required><br><br>
 
         <div class="btn-group" role="group" aria-label="Botões de Ação">
-    <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
-        <input type="submit" class="btn btn-success" value="Cadastrar Colaborador">
-    </div>
+        <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
+          <input type="submit" class="btn btn-success" value="Cadastrar Colaborador">
+        </div>
     <div class="mt-3 mb-3" style="margin-right: 0.4rem;">
         <button type="button" id="averageAgeButton" class="btn btn-secondary">Idade/Média Colaborador</button>
     </div>
@@ -217,7 +217,7 @@ document.getElementById('calculateButton').addEventListener('click', function() 
             var novoSalario = valor * (1 + (porcentagem / 100));
 
             // Exibir o resultado
-            document.getElementById('resultado').innerText = 'Novo Salário: R$ ' + novoSalario.toFixed(2);
+            document.getElementById('resultado').innerText = 'Novo Salário: ' + novoSalario.toFixed(2);
         }
 
         // Adicionar evento de clique ao botão "="
